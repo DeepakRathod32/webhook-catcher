@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 
-const BACKEND_URL = 'http://localhost:3000';
+// const BACKEND_URL = 'http://localhost:3000';
 
 export default function App() {
   const [binId, setBinId] = useState(null);
@@ -16,7 +16,7 @@ export default function App() {
       const response = await fetch(`/api/bins`, { method: 'POST' });
       const data = await response.json();
       setBinId(data.binId);
-      setWebhookUrl(`${BACKEND_URL}${data.url}`);
+      setWebhookUrl(`${window.location.origin}/hook/${data.binId}`);
       setRequests([]);
       setSelectedRequest(null);
     } catch (err) {
@@ -28,7 +28,7 @@ export default function App() {
   useEffect(() => {
     if (!binId) return;
 
-    const socket = io(BACKEND_URL);
+    const socket = io();
 
     socket.emit('join_bin', binId);
 
